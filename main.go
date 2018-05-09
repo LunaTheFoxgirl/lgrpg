@@ -16,6 +16,8 @@ type BotConfiguration struct {
 	BotToken string `json:"token"`
 }
 
+var counter int = 0
+
 func OnMessageCreate(sess *discordgo.Session, event *discordgo.MessageCreate) {
 	// Ignore messages sent from the bot itself.
 	if event.Author.ID == sess.State.User.ID {
@@ -32,6 +34,15 @@ func OnMessageCreate(sess *discordgo.Session, event *discordgo.MessageCreate) {
 			return
 		}
 		fmt.Println(msg.ChannelID)
+	}
+	if event.Message.Content == "New Name" {
+		msg, err := sess.ChannelMessageSend(event.ChannelID, "Hey <@"+event.Author.ID+">, name is: "+GenerateRandomSpacename(counter))
+		if err != nil {
+			fmt.Println("Failure! ", err.Error())
+			return
+		}
+		fmt.Println(msg.ChannelID)
+		counter++;
 	}
 }
 
